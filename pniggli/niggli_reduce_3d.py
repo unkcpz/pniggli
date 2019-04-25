@@ -24,7 +24,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
 
     L = reduced_lattice
     G = _get_metric(L)
-    # import pdb; pdb.set_trace()
 
     # This sets an upper limit on the number of iterations.
     reduced = False
@@ -36,20 +35,15 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
         # X, E, Z for xi, eta, zeta respectively
         G = _get_metric(L)
         A, B, C, X, E, Z = _get_G_param(G)
-        # import pdb; pdb.set_trace()
 
         # step 1
         if A > B + eps or (abs(A - B) < eps and abs(X) > abs(E) + eps):
             M = np.array([[0, -1, 0], [-1, 0, 0], [0, 0, -1]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
         # step 2
         if (B > C + eps) or (abs(B - C) < eps and abs(E) > abs(Z) + eps):
             M = np.array([[-1, 0, 0], [0, 0, -1], [0, -1, 0]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
             continue
@@ -57,13 +51,8 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
         l, m, n = _get_angle_param(X, E, Z, eps)
         # step 3
         if l * m * n == 1:
-            # i = -1 if l == -1 else 1
-            # j = -1 if m == -1 else 1
-            # k = -1 if n == -1 else 1
             i, j, k = l, m, n
             M = np.array([[i, 0, 0], [0, j, 0], [0, 0, k]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
         # step 4
@@ -92,8 +81,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             or (abs(X + B) < eps and Z < -eps)
         ):
             M = np.array([[1, 0, 0], [0, 1, -np.sign(X)], [0, 0, 1]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
             continue
@@ -105,8 +92,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             or (abs(A + E) < eps and Z < -eps)
         ):
             M = np.array([[1, 0, -np.sign(E)], [0, 1, 0], [0, 0, 1]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
             continue
@@ -118,8 +103,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             or (abs(A + Z) < eps and E < -eps)
         ):
             M = np.array([[1, -np.sign(Z), 0], [0, 1, 0], [0, 0, 1]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
             continue
@@ -127,8 +110,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
         # step 8
         if X + E + Z + A + B < -eps or (abs(X + E + Z + A + B) < eps < Z + (A + E) * 2):
             M = np.array([[1, 0, 1], [0, 1, 1], [0, 0, 1]])
-            # G = np.dot(M.T, np.dot(G, M))
-            # L = np.matmul(M.T, L)
             L = np.matmul(L, M)
             reduced = False
             continue
