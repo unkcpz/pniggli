@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pniggli.niggli_reduce_3d import _get_param, _get_metric, _get_angle_type, _get_angle_param
+from pniggli.utils import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
 
 class TestNiggliUtils(unittest.TestCase):
 
@@ -29,7 +29,9 @@ class TestNiggliUtils(unittest.TestCase):
         lattice = np.array([4.0, 0.0, 0.0,
                             0.0, 4.0, 0.0,
                             0.0, 0.0, 4.0]).reshape((3, 3))
-        l, m, n = _get_angle_param(lattice, eps=1e-5)
+        G = _get_metric(lattice)
+        _, _, _, X, E, Z = _get_G_param(G)
+        l, m, n = _get_angle_param(X, E, Z, eps=1e-5)
 
         self.assertEqual(l, 0)
         self.assertEqual(m, 0)

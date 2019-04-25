@@ -1,4 +1,4 @@
-# TestCase from https://github.com/atztogo/niggli
+# Test Data transformed from https://github.com/atztogo/niggli/ repository
 import unittest
 import os
 import numpy as np
