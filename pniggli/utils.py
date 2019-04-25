@@ -47,4 +47,4 @@ def _get_angle_type(angle, eps=1e-5) -> int:
 
 def _get_metric(lattice) -> np.ndarray:
     M = lattice.reshape((3, 3))
-    return np.matmul(M.T, M)
+    return np.matmul(M, M.T)

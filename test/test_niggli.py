@@ -1,4 +1,5 @@
 # Test Data transformed from https://github.com/atztogo/niggli/ repository
+# However use row vector to represent the lattice
 import unittest
 import os
 import numpy as np
@@ -54,13 +55,13 @@ class TestNiggli(unittest.TestCase):
                      " angles: %s" % np.array(get_angles(reduced_lattice))]))
 
 def get_lattice_parameters(lattice):
-    return np.sqrt(np.dot(lattice.T, lattice).diagonal())
+    return np.sqrt(np.matmul(lattice, lattice.T).diagonal())
 
 def get_angles(lattice):
     a, b, c = get_lattice_parameters(lattice)
-    alpha = np.arccos(np.vdot(lattice[:,1], lattice[:,2]) / b / c)
-    beta  = np.arccos(np.vdot(lattice[:,2], lattice[:,0]) / c / a)
-    gamma = np.arccos(np.vdot(lattice[:,0], lattice[:,1]) / a / b)
+    alpha = np.arccos(np.dot(lattice[1,:], lattice[2,:]) / b / c)
+    beta  = np.arccos(np.dot(lattice[2,:], lattice[0,:]) / c / a)
+    gamma = np.arccos(np.dot(lattice[0,:], lattice[1,:]) / a / b)
     return np.array([alpha, beta, gamma]) / np.pi * 180
 
 def read_file(filename):
@@ -72,11 +73,11 @@ def read_file(filename):
                 continue
             lattice.append([float(x) for x in line.split()])
             if len(lattice) == 3:
-                all_lattices.append(np.transpose(lattice))
+                all_lattices.append(np.array(lattice))
                 lattice = []
     return all_lattices
 
 def show_lattice(i, lattice):
     print("# %d" % (i + 1))
-    for v in lattice.T:
+    for v in lattice:
         print(" ".join(["%20.16f" % x for x in v]))
