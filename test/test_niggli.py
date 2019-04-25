@@ -2,7 +2,7 @@
 import unittest
 import os
 import numpy as np
-from pniggli import niggli_reduce
+from pniggli import niggli_reduce, niggli_check
 
 LATTICE_FILENAME = os.path.join(os.path.dirname(__file__), 'lattices.dat')
 RLATTICE_FILENAME = os.path.join(os.path.dirname(__file__), 'reduced_lattices.dat')
@@ -17,12 +17,22 @@ class TestNiggli(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_lattice_error(self):
+        lattice = [1, 2.0, 2.0, 2.3]
+        with self.assertRaises(ValueError):
+            niggli_reduce(lattice)
+
     def test_reference_data(self):
         for i, reference_lattice in enumerate(self._reference_lattices):
             angles = np.array(get_angles(reference_lattice))
             self.assertTrue((angles > 90 - 1e-3).all() or
                             (angles < 90 + 1e-3).all(),
                             msg=("%d %s" % (i + 1, angles)))
+
+    def test_niggli_check_and_data(self):
+        for i, reference_lattice in enumerate(self._reference_lattices):
+            is_niggli = niggli_check(reference_lattice, 1e-5)
+            self.assertTrue(is_niggli, msg=("%d not niggli" % (i + 1)))
 
     def test_niggli_reduce(self):
         for i, (input_lattice, reference_lattice) in enumerate(
