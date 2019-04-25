@@ -1,14 +1,14 @@
 from typing import Tuple
 import numpy as np
 
-from .utils import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
+from .utils_3d import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
 
 
-__all__ = ['niggli_reduce', 'niggli_check']
+__all__ = ['niggli_reduce_3d', 'niggli_check']
 
 reduced_lattice = np.ndarray
 
-def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
+def niggli_reduce_3d(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
     """
     niggli reduction
 

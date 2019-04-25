@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pniggli.utils import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
+from pniggli.utils_3d import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
 
 class TestNiggliUtils(unittest.TestCase):
 
