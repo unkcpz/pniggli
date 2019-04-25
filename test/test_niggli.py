@@ -3,7 +3,7 @@
 import unittest
 import os
 import numpy as np
-from pniggli import niggli_reduce_2d, niggli_reduce_3d, niggli_check
+from pniggli import niggli_reduce, niggli_check
 
 LATTICE_FILENAME_3D = os.path.join(os.path.dirname(__file__), 'lattices_3d.dat')
 RLATTICE_FILENAME_3D = os.path.join(os.path.dirname(__file__), 'reduced_lattices_3d.dat')
@@ -45,9 +45,9 @@ class TestNiggli3D(unittest.TestCase):
         pass
 
     def test_lattice_error(self):
-        lattice = [1, 2.0, 2.0, 2.3]
+        lattice = [1, 2.0, 2.0]
         with self.assertRaises(ValueError):
-            niggli_reduce_3d(lattice)
+            niggli_reduce(lattice)
 
     def test_reference_data(self):
         for i, reference_lattice in enumerate(self._reference_lattices):
@@ -64,7 +64,7 @@ class TestNiggli3D(unittest.TestCase):
     def test_niggli_reduce(self):
         for i, (input_lattice, reference_lattice) in enumerate(
                 zip(self._input_lattices, self._reference_lattices)):
-            reduced_lattice = niggli_reduce_3d(input_lattice)
+            reduced_lattice = niggli_reduce(input_lattice)
             show_lattice(i, reduced_lattice)
             self.assertTrue(
                 np.allclose(reduced_lattice, reference_lattice),
@@ -100,12 +100,12 @@ class TestNiggli2D(unittest.TestCase):
     def test_lattice_error(self):
         lattice = [1, 2.0, 2.0, 2.3, 0]
         with self.assertRaises(ValueError):
-            niggli_reduce_2d(lattice)
+            niggli_reduce(lattice)
 
     def test_niggli_reduce(self):
         for i, (input_lattice, reference_lattice) in enumerate(
                 zip(self._input_lattices, self._reference_lattices)):
-            reduced_lattice = niggli_reduce_2d(input_lattice)
+            reduced_lattice = niggli_reduce(input_lattice)
             show_lattice(i, reduced_lattice)
             self.assertTrue(
                 np.allclose(reduced_lattice, reference_lattice),

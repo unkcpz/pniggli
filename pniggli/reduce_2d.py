@@ -5,9 +5,7 @@ from .utils_2d import _get_G_param, _get_metric, _get_angle_type, _get_angle_par
 
 __all__ = ['niggli_reduce_2d']
 
-reduced_lattice = np.ndarray
-
-def niggli_reduce_2d(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
+def niggli_reduce_2d(lattice, eps: float=1e-5, loop_max=100) -> np.ndarray:
     """
     niggli reduction
 
