@@ -28,11 +28,8 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
     G = _get_metric(L)
 
     # This sets an upper limit on the number of iterations.
-    reduced = False
-    count = 0
-    while not reduced and count < loop_max:
+    for _ in range(loop_max):
         reduced = True
-        count += 1
         # step 0: get parameters for A1-A8
         # X, E, Z for xi, eta, zeta respectively
         G = _get_metric(L)
@@ -115,6 +112,9 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             L = np.matmul(L, M)
             reduced = False
             continue
+
+        if reduced:
+            break
 
     reduced_lattice = L
     return reduced_lattice
