@@ -38,13 +38,11 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
         # step 1
         if A > B + eps or (abs(A - B) < eps and abs(X) > abs(E) + eps):
             M = np.array([[0, -1, 0], [-1, 0, 0], [0, 0, -1]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
         # step 2
         if (B > C + eps) or (abs(B - C) < eps and abs(E) > abs(Z) + eps):
             M = np.array([[-1, 0, 0], [0, 0, -1], [0, -1, 0]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
             continue
@@ -54,7 +52,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
         if l * m * n == 1:
             i, j, k = l, m, n
             M = np.array([[i, 0, 0], [0, j, 0], [0, 0, k]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
         # step 4
@@ -71,7 +68,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
                 elif l == 0:
                     i = -1
             M = np.array([[i, 0, 0], [0, j, 0], [0, 0, k]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
 
@@ -86,7 +82,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             M = np.array([[1, 0, 0],
                           [0, 1, 0],
                           [0, -np.sign(X), 1]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
             continue
@@ -100,7 +95,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             M = np.array([[1, 0, 0],
                           [0, 1, 0],
                           [-np.sign(E), 0, 1]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
             continue
@@ -114,7 +108,6 @@ def niggli_reduce(lattice, eps: float=1e-5, loop_max=100) -> reduced_lattice:
             M = np.array([[1, 0, 0],
                           [-np.sign(Z), 1, 0],
                           [0, 0, 1]])
-            # L = np.matmul(L, M)
             L = np.matmul(M, L)
             reduced = False
             continue
