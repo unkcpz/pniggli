@@ -57,7 +57,7 @@ The 2D example is a triangle motif.
 Feature
 ----------
 
-##### v0.1.1
+##### v0.1.2
 + 2D and 3D niggli reduce support
 + niggli_check for 3D lattice
 
