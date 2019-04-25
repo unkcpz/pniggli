@@ -148,17 +148,17 @@ def _get_G_param(G, eps=1e-5) -> Tuple[float, float, float, float, float, float,
     A = G[0, 0]
     B = G[1, 1]
     C = G[2, 2]
-    xi = 2 * G[1, 2]
-    eta = 2 * G[0, 2]
-    zeta = 2 * G[0, 1]
+    X = 2 * G[1, 2]
+    E = 2 * G[0, 2]
+    Z = 2 * G[0, 1]
 
-    return A, B, C, xi, eta, zeta
+    return A, B, C, X, E, Z
 
-def _get_angle_param(xi, eta, zeta, eps=1e-5) -> Tuple[int, int, int]:
+def _get_angle_param(X, E, Z, eps=1e-5) -> Tuple[int, int, int]:
     # angle types
-    l = _get_angle_type(xi, eps)
-    m = _get_angle_type(eta, eps)
-    n = _get_angle_type(zeta, eps)
+    l = _get_angle_type(X, eps)
+    m = _get_angle_type(E, eps)
+    n = _get_angle_type(Z, eps)
 
     return l, m, n
 
@@ -184,12 +184,12 @@ def _get_metric(lattice) -> np.ndarray:
     M = lattice.reshape((3, 3))
     return np.matmul(M.T, M)
 
-def niggli_check(L, eps):
+def niggli_check(L, eps=1e-5) -> bool:
     G = _get_metric(L)
     A, B, C, X, E, Z = _get_G_param(G)
     return _niggli_check(A, B, C, X, E, Z, eps)
 
-def _niggli_check(A,B,C,xi,eta,zeta,eps):
+def _niggli_check(A, B, C, X, E, Z, eps=1e-5):
     """Checks that the niggli reduced cell satisfies the niggli conditions.
     Conditions listed at: https://arxiv.org/pdf/1203.5146.pdf.
     Args:
@@ -203,60 +203,57 @@ def _niggli_check(A,B,C,xi,eta,zeta,eps):
     Returns:
         False if niggli conditons aren't met.
     """
-
-    # import pdb; pdb.set_trace()
-
     if not (A-eps > 0 and (A < B-eps or np.allclose(A,B,atol=eps)) and
             (B < C-eps or np.allclose(B,C,atol=eps))):
         return False
 
-    if np.allclose(A,B,atol=eps) and not (abs(xi) < abs(eta)-eps or
-                                          np.allclose(abs(xi),abs(eta),atol=eps)):
+    if np.allclose(A,B,atol=eps) and not (abs(X) < abs(E)-eps or
+                                          np.allclose(abs(X),abs(E),atol=eps)):
         return False
 
-    if np.allclose(B,C,atol=eps) and not (abs(eta) < abs(zeta)-eps
-                                          or np.allclose(abs(eta),abs(zeta),atol=eps)):
+    if np.allclose(B,C,atol=eps) and not (abs(E) < abs(Z)-eps
+                                          or np.allclose(abs(E),abs(Z),atol=eps)):
         return False
 
-    if not ((xi-eps > 0 and eta-eps > 0 and zeta-eps > 0) or
-            ((xi < 0-eps or np.allclose(xi,0,atol=eps))
-             and (eta < 0-eps or np.allclose(eta,0,atol=eps))
-             and (zeta < 0-eps or np.allclose(zeta,0,atol=eps)))):
+    if not ((X-eps > 0 and E-eps > 0 and Z-eps > 0) or
+            ((X < 0-eps or np.allclose(X,0,atol=eps))
+             and (E < 0-eps or np.allclose(E,0,atol=eps))
+             and (Z < 0-eps or np.allclose(Z,0,atol=eps)))):
         return False
 
-    if not (abs(xi) < B-eps or np.allclose(abs(xi),B,atol=eps)):
+    if not (abs(X) < B-eps or np.allclose(abs(X),B,atol=eps)):
         return False
 
-    if not ((abs(eta) < A-eps or np.allclose(abs(eta),A,atol=eps)) and (abs(zeta) < A-eps or
-                                                           np.allclose(abs(zeta),A,atol=eps))):
+    if not ((abs(E) < A-eps or np.allclose(abs(E),A,atol=eps)) and (abs(Z) < A-eps or
+                                                           np.allclose(abs(Z),A,atol=eps))):
         return False
 
-    if not (C < A+B+C+xi+eta+zeta-eps or np.allclose(C, A+B+C+xi+eta+zeta,atol=eps)):
+    if not (C < A+B+C+X+E+Z-eps or np.allclose(C, A+B+C+X+E+Z,atol=eps)):
         return False
 
-    if np.allclose(xi,B,atol=eps) and not (zeta < 2.*eta-eps or
-                                           np.allclose(zeta,2.*eta,atol=eps)):
+    if np.allclose(X,B,atol=eps) and not (Z < 2.*E-eps or
+                                           np.allclose(Z,2.*E,atol=eps)):
         return False
 
-    if np.allclose(eta,A,atol=eps) and not (zeta < 2.*xi-eps or
-                                            np.allclose(zeta,2.*xi,atol=eps)):
+    if np.allclose(E,A,atol=eps) and not (Z < 2.*X-eps or
+                                            np.allclose(Z,2.*X,atol=eps)):
         return False
 
-    if np.allclose(zeta,A,atol=eps) and not (eta < 2.*xi-eps or
-                                             np.allclose(eta,2.*xi,atol=eps)):
+    if np.allclose(Z,A,atol=eps) and not (E < 2.*X-eps or
+                                             np.allclose(E,2.*X,atol=eps)):
         return False
 
-    if np.allclose(xi,-B,atol=eps) and not np.allclose(zeta,0,atol=eps):
+    if np.allclose(X,-B,atol=eps) and not np.allclose(Z,0,atol=eps):
         return False
 
-    if np.allclose(eta,-A,atol=eps) and not np.allclose(zeta,0,atol=eps):
+    if np.allclose(E,-A,atol=eps) and not np.allclose(Z,0,atol=eps):
         return False
 
-    if np.allclose(zeta,-A,atol=eps) and not np.allclose(eta,0,atol=eps):
+    if np.allclose(Z,-A,atol=eps) and not np.allclose(E,0,atol=eps):
         return False
 
-    if np.allclose(C,A+B+C+xi+eta+zeta,rtol=0.0) and not ((2.*A+2.*eta+zeta) < 0-eps or
-                                                 np.allclose(2.*A+2.*eta+zeta,0,atol=eps)):
+    if np.allclose(C,A+B+C+X+E+Z,rtol=0.0) and not ((2.*A+2.*E+Z) < 0-eps or
+                                                 np.allclose(2.*A+2.*E+Z,0,atol=eps)):
         return False
 
     return True
