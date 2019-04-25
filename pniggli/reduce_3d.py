@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 
-from .utils import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
+from .utils_3d import _get_G_param, _get_metric, _get_angle_type, _get_angle_param
 
 
 __all__ = ['niggli_reduce_3d', 'niggli_check']
